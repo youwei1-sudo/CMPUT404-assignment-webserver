@@ -71,21 +71,16 @@ class MyWebServer(socketserver.BaseRequestHandler):
             if root_flag:
                 f = open(c_path + "index.html", "r")
                 data = f.read()
-                # print("data", data)
                 message = message + "Content-Type: text/html" + "\r\n\r\n" + data
             else:
                 f = open(c_path, "r")
                 data = f.read()
                 if (c_path[-3:] == "css"):
                     message = message + "Content-Type: text/css" + "\r\n\r\n" + data
-                    # print("data", data)
                 else:
                     message = message + "Content-Type: text/html" + "\r\n\r\n"  + data             
         elif (status_code == "301") :
-            # f = open(c_path + "index.html", "r")
-            # data = f.read()
-            message = message +"Content-Type: text/html" + "\r\n\r\n"  + self.html_body_response(c_path, True)
-            # print("data", data)
+            message = message + "Location: "+ c_path +"\r\n"+"Content-Type: text/html" + "\r\n\r\n"  + self.html_body_response(c_path, True)
             
         elif (status_code == "404") :
             message = message + "Content-Type: text/html" + "\r\n\r\n"  +self.html_body_response("404 NOT FOUND, COOL")
@@ -104,9 +99,9 @@ class MyWebServer(socketserver.BaseRequestHandler):
         print("gota self.data, the request")
         # split byte recievd to readable format
         method_path_protocol = (self.data.decode("utf-8").split('\n'))[0].strip().split()
-        # print(method_path_protocol)
         rest = ""
         root_flag = False
+        print("haha: method_path_protocol",method_path_protocol)
         if (method_path_protocol[0] == "GET") :
             
             if ("../" in method_path_protocol[1]):
